@@ -1,0 +1,62 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    {% if category_name %} 
+        {{ category_name }}
+    {% else %}
+        Auctions
+    {% endif %}
+{% endblock title %}
+
+{% block body %}
+    <h2 class="text-center text-light">
+        {% if category_name %} 
+            {{ category_name }}
+        {% else %}
+            Active Listings
+        {% endif %}
+    </h2>
+    <div class="container">
+        <div class="row align-items-md-stretch justify-content-center">
+            {% for listing in listings %}
+                <div class="col-lg-6">
+                    {% if listing.img %}
+                        <div class="container text-center product-card">
+                            <img src="{{ listing.img }}" class="thumbnail">
+                        </div>
+                    {% endif %}
+                    <div class="box-element product">
+                        <h6><strong>{{ listing.title }}</strong></h6>
+                        <hr>
+                        {% if user.is_authenticated %}
+                            {% if listing in user.watchlist.all %}
+                                <a class="btn mbutton myellow" href="{% url 'watch_listing' listing.id %}">Remove from Watchlist</a>
+                            {% else %}
+                                <a class="btn mbutton myellow" href="{% url 'watch_listing' listing.id %}">Add to Watchlist</a>
+                            {% endif %}
+                        {% endif %}
+                        <a class="btn mbutton mteal" href="{% url 'listing' listing.id %}" style="padding: 0.375rem 1.25rem;">View</a>
+                        <h4 style="float: right;">€
+                            {% if listing.bids.count > 0 %}
+                                {{ listing.bids.first.bid }}
+                            {% else %}
+                                {{ listing.starting_bid }}
+                            {% endif %}
+                        </h4>
+                    </div>
+                </div>
+            {% empty %}
+            <div class="container text-center text-light">
+                <h2>
+                    {% if category_name %} 
+                        There are no active listings in {{ category_name }} at the moment.
+                    {% else %}
+                        There are no active listings at the moment.
+                    {% endif %}
+                </h2>
+                <img class="img img-fluid rounded" src="https://www.pngitem.com/pimgs/m/52-526357_kawaii-sad-face-png-transparent-png.png">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

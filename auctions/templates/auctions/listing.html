@@ -1,0 +1,121 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %}
+    Viewing: {{ listing.title }}
+{% endblock  %}
+
+{% block body %}
+    <div class="container text-center">
+        <div class="row justify-content-center text-light">
+            <div class="col-lg-6 listing-card">
+                <h3><strong>{{ listing.title }}</strong></h3>
+                {% if listing.img %}
+                    <img src="{{ listing.img }}" class="img img-fluid" rounded>
+                {% endif %}
+                <p class="lead light-themed">{{ listing.description }}</p>
+                {% if not listing.ended %}
+                    <p class="lead">
+                        <strong class="light-themed">
+                            {% if listing.bids.count > 0 %}
+                                Current bid:</strong> €{{ listing.bids.first.bid }}
+                            {% else %}
+                                Price:</strong> €{{ listing.starting_bid }}
+                            {% endif %}
+                    </p>
+                    {% if listing.bids.count > 0 %}
+                        <p class="badge badge-pill badge-info">Bids: {{ listing.bids.count }}</p>
+                    {% endif %}
+                    {% if message %} 
+                        <p class="badge badge-pill badge-danger">{{ message }}</p>
+                    {% endif %}
+                    {% if listing.bids.first.bidder == user %}
+                        <p class="badge badge-pill badge-success">You're in the lead!</p>
+                    {% endif %}
+                    {% if listing.creator == user %}
+                        <p><a class="btn mbutton mred" href="{% url 'close_listing' listing.id %}">End the listing</a></p>
+                    {% elif user.is_authenticated %}
+                        <form action="{% url 'bid_listing' listing.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">€</span>
+                                </div>
+                                    {{ bid_form.bid }}
+                                <div class="input-group-append">
+                                    <span class="input-group-text">.00</span>
+                                </div> 
+                            </div>
+                            <input class="btn mbutton mblue" type="submit" value="Place Bid">
+                        </form>
+                        {% if listing in user.watchlist.all %}
+                            <p><a class="btn mbutton myellow" href="{% url 'watch_listing' listing.id %}">Remove from Watchlist</a></p>
+                        {% else %}
+                            <p><a class="btn mbutton myellow" href="{% url 'watch_listing' listing.id %}">Add to Watchlist</a></p>
+                        {% endif %}
+                    {% else %}
+                        <p><a href="{% url 'login' %}" class="bid_login">Please login to place a bid.</a></p>
+                    {% endif %}
+                {% else %}
+                    <p class="lead">
+                        <strong class="light-themed">
+                            {% if listing.bids.count > 0 %}
+                                Final Bid:</strong> €{{ listing.bids.first.bid }}
+                            {% else %}
+                                Final Price:</strong> €{{ listing.starting_bid }}
+                            {% endif %}
+                    </p>
+                    {% if listing.bids.first.bidder == user %}
+                        <p class="badge badge-pill badge-success">You won!</p>
+                    {% endif %}
+                {% endif %}
+                <p class="lead">
+                    {% if listing.category %}
+                        <strong>Category</strong>: <a href="{% url 'category' listing.category.name %}">{{ listing.category.name }}</a>
+                    {% else %}
+                        No category listed.
+                    {% endif %}
+                </p>
+                <p><strong>Listing created</strong>: {{ listing.start_time }}</p>
+                <p><strong>Listing ends</strong>: {{  listing.end_time }}</p>
+            </div>
+        </div>
+        <div class="container text-center text-light">
+            <div class="row justify-content-center comment-section">
+                <div class="col-lg-4">
+                    <span><h3 class="border-bottom">Comments:</h3></span>
+                    {% if user.is_authenticated and not listing.ended %}
+                        <form method="post" action="{% url 'comment' listing.id %}">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                {{ comment_form.comment }}
+                                <input type="submit" class="btn mbutton mblue">
+                            </div>
+                        </form>
+                    {% else %} 
+                        <p><a href="{% url 'login' %}" class="bid_login" style="border-radius: 5px;">Please login to place a comment.</a></p>
+                    {% endif %}
+                </div>
+                <div class="col-lg-8 text-center justify-content-center">
+                    <div class="row text-center">
+                        {% for comment in listing.comments.all %}
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8">
+                                <div class="box-element product">
+                                    <h6><strong>{{ comment.creator }}</strong></h6>                                
+                                    <h4>{{ comment.comment }}</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-2"></div>
+                        {% empty %}
+                            <div class="col-lg-2"></div>
+                            <div class="col-lg-8">
+                                <h4 class="py-4">No comments have been made.</h4>
+                            </div>
+                            <div class="col-lg-2"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

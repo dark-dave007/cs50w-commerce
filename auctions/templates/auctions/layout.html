@@ -1,0 +1,45 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Auctions{% endblock title %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'auctions/f.css' %}" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1 class="text-center text-light">Auctions</h1>
+        <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom text-center text-light">
+            <div class="text-start text-light col-md-3">
+                {% if user.is_authenticated %}
+                    Signed in as <strong>{{ user.username }}</strong>.
+                {% else %}
+                    Not signed in.
+                {% endif %}
+            </div>
+            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+                <li><a href="{% url 'index' %}" class="nav-link px-2">Active Listings</a></li>
+                {% if user.is_authenticated %}
+                    <li><a class="nav-link px-2 link-dark" href="{% url 'create' %}">Create Listing</a></li>
+                {% endif %}
+                <li><a href="{% url 'categories' %}" class="nav-link px-2">Categories</a></li>
+                {% if user.is_authenticated %}
+                    <li><a class="nav-link px-2 link-dark" href="{% url 'watchlist' %}">Watchlist <p class="badge badge-pill badge-info">{{ user.watchlist.count }}</p></a></li>
+                {% endif %}
+            </ul>
+            <div class="col-md-3 text-end">
+            {% if user.is_authenticated %}
+                <a href="{% url 'logout' %}"><button class="btn mbutton myellow">Log Out</button></a>
+            {% else %}
+                <a href="{% url 'login' %}"><button type="button" class="btn mbutton mteal">Login</button></a>
+                <a href="{% url 'register' %}"><button type="button" class="btn mbutton mteal mreverse">Sign-up</button></a>
+            {% endif %}
+            </div>
+        </header>
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>
