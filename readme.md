@@ -34,6 +34,9 @@ python3 manage.py createsuperuser
 ```
 And follow the instructions given by Django.
 
+## Project Info
+To add categories, go to the admin panel (127.0.0.1:8000/admin), and manually add them.
+
 ### Details
 The project I made is an e-commerce, ebay like website that will allow users to post auction listings, place bids on listings, comment on those listings, and add listings to a watchlist.
 
