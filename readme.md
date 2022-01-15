@@ -9,7 +9,7 @@ This project was inspired by [CS50 Web Programming with Python and JavaScript](h
 The first thing to do is clone this repository:
 ```bash
 git clone https://github.com/dark-dave007/cs50w-commerce
-cd commerce
+cd cs50w-commerce
 ```
 
 Install dependencies:
