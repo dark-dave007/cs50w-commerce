@@ -78,7 +78,12 @@ def listing(request, listing_id: int, message: str = None):
     return render(
         request,
         "auctions/listing.html",
-        {"listing": listing, "bid_form": BidForm(), "comment_form": CommentForm()},
+        {
+            "listing": listing,
+            "message": message,
+            "bid_form": BidForm(),
+            "comment_form": CommentForm(),
+        },
     )
 
 
