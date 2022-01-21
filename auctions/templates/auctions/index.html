@@ -1,4 +1,5 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
 
 {% block title %}
     {% if category_name %} 
@@ -47,6 +48,7 @@
                 </div>
             {% empty %}
             <div class="container text-center text-light">
+                <img class="img img-fluid rounded" style="height: 500px;" src="{% static 'auctions/404.png' %}">
                 <h2>
                     {% if category_name %} 
                         There are no active listings in {{ category_name }} at the moment.
@@ -54,7 +56,6 @@
                         There are no active listings at the moment.
                     {% endif %}
                 </h2>
-                <img class="img img-fluid rounded" src="https://www.pngitem.com/pimgs/m/52-526357_kawaii-sad-face-png-transparent-png.png">
             </div>
             {% endfor %}
         </div>
