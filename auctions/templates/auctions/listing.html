@@ -91,6 +91,8 @@
                                 <input type="submit" class="btn mbutton mblue" value="Submit">
                             </div>
                         </form>
+                    {% elif user.is_authenticated and listing.ended %}
+                        <p>This auction has ended.</p>
                     {% else %} 
                         <p><a href="{% url 'login' %}" class="bid_login" style="border-radius: 5px;">Please login to place a comment.</a></p>
                     {% endif %}

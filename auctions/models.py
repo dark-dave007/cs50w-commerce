@@ -17,6 +17,14 @@ class Category(models.Model):
         # order alphabetically
         ordering = ("name",)
 
+    @property
+    def count_active_listings(self):
+        return Listing.objects.filter(
+            category=Category.objects.get(name=self.name),
+            ended_manually=False,
+            end_time__gte=datetime.now(),
+        ).count()
+
     def __str__(self) -> str:
         return str(self.name)
 
